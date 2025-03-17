@@ -32,7 +32,7 @@ def recognize_palm(hand_landmarks):
     if thumb_dist > 0.1 and index_dist > 0.1:
         return "Open Palm"
     else:
-        return "Fist"
+        return None
     
 def recognize_ok(hand_landmarks):
     # Extract necessary landmarks
