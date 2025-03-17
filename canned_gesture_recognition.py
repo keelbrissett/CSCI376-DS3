@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+import custom_gestures
 
 # Import the tasks API for gesture recognition
 from mediapipe.tasks.python.vision import GestureRecognizer, GestureRecognizerOptions
@@ -48,11 +49,26 @@ def main():
 
             # Example of taking browser action based on recognized gesture
             if recognized_gesture == "Open_Palm":
-                webbrowser.open('http://google.com', new=2)
+                webbrowser.open('https://www.onlinegames.io/stickman-parkour/', new=2) # Changing endpoint to our game
                 time.sleep(1)
-                pyautogui.write("Hello world!", interval=0.25)
+                pyautogui.write("Game is Running!", interval=0.25)
                 # Make sure to allow for time between recognized gestures so only one window is opened
                 time.sleep(5)
+            elif recognized_gesture == "Thumb_Up": # Jumping straight up
+                pyautogui.press("w")
+            elif recognized_gesture == "Thumb_Left": # maybe not a real gesture...
+                pyautogui.press("a")
+            elif recognized_gesture == "Thumb_Right": # maybe not a real gesture...
+                pyautogui.press("d")
+            elif recognized_gesture == "Closed_Fist": # Rolling
+                pyautogui.press("s")
+            elif recognized_gesture == "Victory": # start game
+                pyautogui.press("space")
+            elif recognized_gesture == "": # Up and Right
+                pyautogui.press("w") and pyautogui.press("dw")
+            elif recognized_gesture == "": # Up and Left
+                pyautogui.press("w") and pyautogui.press("a")
+
 
             # Display recognized gesture and confidence
             cv2.putText(image, f"Gesture: {recognized_gesture} ({confidence:.2f})", 
