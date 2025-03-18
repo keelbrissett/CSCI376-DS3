@@ -54,19 +54,21 @@ def main():
                 pyautogui.write("Game is Running!", interval=0.25)
                 # Make sure to allow for time between recognized gestures so only one window is opened
                 time.sleep(5)
-            elif recognized_gesture == "Pointing_Up": # Jumping straight up
-                pyautogui.press("w")
-            elif recognized_gesture == "Thumb_Left": # maybe not a real gesture...
-                pyautogui.press("a")
-            elif recognized_gesture == "Thumb_Right": # maybe not a real gesture...
-                pyautogui.press("d")
-            elif recognized_gesture == "Closed_Fist": # Rolling
+            elif recognized_gesture == "Pointing_Up": # Jump Straight Up
+                pyautogui.press("w") 
+            elif recognized_gesture == "Thumb_Left": # Move Left
+                with pyautogui.hold('a'):
+                    pyautogui.hold("a")
+            elif recognized_gesture == "Thumb_Right": # Move Right
+                with pyautogui.hold('d'):
+                    pyautogui.hold("d")
+            elif recognized_gesture == "Closed_Fist": 
                 pyautogui.press("s")
-            elif recognized_gesture == "Victory": # start game
-                pyautogui.press("space")
-            elif recognized_gesture == "": # Up and Right
+            elif recognized_gesture == "Victory": # Start Game
+                pyautogui.press("space") 
+            elif recognized_gesture == "": # Jump Right
                 pyautogui.press("w") and pyautogui.press("d")
-            elif recognized_gesture == "": # Up and Left
+            elif recognized_gesture == "": # Jump Left
                 pyautogui.press("w") and pyautogui.press("a")
 
 
