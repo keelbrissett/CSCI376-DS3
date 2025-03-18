@@ -33,7 +33,25 @@ def recognize_palm(hand_landmarks):
         return "Open Palm"
     else:
         return None
-    
+
+def recognize_thumb_pointing_left(hand_landmarks):
+    thumb_tip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
+    thumb_ip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_IP]
+    thumb_mcp = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_MCP]
+
+    # Vector from MCP → TIP
+    delta_x = thumb_tip.x - thumb_mcp.x
+
+    # Thumb extended condition
+    thumb_dist = calculate_distance((thumb_tip.x, thumb_tip.y), (thumb_mcp.x, thumb_mcp.y))
+
+    if thumb_dist > 0.1 and delta_x < -0.02:  # Small negative threshold
+        return "Thumb Left"
+    else:
+        return None
+
+
+
     
 def recognize_ok(hand_landmarks):
     # Extract necessary landmarks
@@ -57,21 +75,6 @@ def recognize_ok(hand_landmarks):
             return "Okay Gesture"
     return "Unknown"
 
-
-def recognize_thumb_left(hand_landmarks):
-    # necessary landmarks
-    thumb_cmc = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_CMC]
-    thumb_mcp = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_MCP]
-    thumb_ip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_IP]
-    thumb_tip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
-
-    #calculatng the distance between 
-    
-
-    
-
-def recognize_thumb_right(hand_landmarks):
-    
 def main():
     # Initialize video capture
     cap = cv2.VideoCapture(0)  # 0 is the default webcam
