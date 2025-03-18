@@ -1,6 +1,6 @@
 import cv2
 import mediapipe as mp
-import custom_gestures
+import custom_gestures # Todo
 
 # Import the tasks API for gesture recognition
 from mediapipe.tasks.python.vision import GestureRecognizer, GestureRecognizerOptions
