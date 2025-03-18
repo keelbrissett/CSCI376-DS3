@@ -36,7 +36,7 @@ def recognize_palm(hand_landmarks):
 
 def recognize_thumb_pointing_left(hand_landmarks):
     thumb_tip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
-    thumb_ip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_IP]
+    # thumb_ip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_IP]
     thumb_mcp = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_MCP]
 
     # Vector from MCP → TIP
@@ -46,10 +46,25 @@ def recognize_thumb_pointing_left(hand_landmarks):
     thumb_dist = calculate_distance((thumb_tip.x, thumb_tip.y), (thumb_mcp.x, thumb_mcp.y))
 
     if thumb_dist > 0.1 and delta_x < -0.02:  # Small negative threshold
-        return "Thumb Left"
+        return "Thumb_Left"
     else:
         return None
 
+def recognize_thumb_pointing_right(hand_landmarks):
+    thumb_tip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
+    # thumb_ip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_IP]
+    thumb_mcp = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_MCP]
+
+    # Vector from MCP → TIP
+    delta_x = thumb_tip.x - thumb_mcp.x
+
+    # Thumb extended condition
+    thumb_dist = calculate_distance((thumb_tip.x, thumb_tip.y), (thumb_mcp.x, thumb_mcp.y))
+
+    if thumb_dist > 0.1 and delta_x > 0.02:  # Small positive threshold
+        return "Thumb_Right"
+    else:
+        return None
 
 
     
@@ -112,7 +127,7 @@ def main():
 
                     # Recognize gesture
                     # gesture = recognize_palm(hand_landmarks)
-                    gesture = recognize_ok(hand_landmarks)
+                    gesture = recognize_thumb_pointing_left(hand_landmarks)
                     
                     # Display gesture near hand location
                     cv2.putText(image, gesture, 

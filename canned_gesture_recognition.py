@@ -1,6 +1,6 @@
 import cv2
 import mediapipe as mp
-import custom_gestures # Todo
+from custom_gestures import recognize_thumb_pointing_left, recognize_thumb_pointing_right
 
 # Import the tasks API for gesture recognition
 from mediapipe.tasks.python.vision import GestureRecognizer, GestureRecognizerOptions
@@ -41,6 +41,8 @@ def main():
 
         # Perform gesture recognition on the image
         result = gesture_recognizer.recognize(mp_image)
+        recognized_gesture = "None"
+        confidence = 0
 
         # Draw the gesture recognition results on the image
         if result.gestures:
@@ -56,20 +58,28 @@ def main():
                 time.sleep(5)
             elif recognized_gesture == "Pointing_Up": # Jump Straight Up
                 pyautogui.press("w") 
-            elif recognized_gesture == "Thumb_Left": # Move Left
-                with pyautogui.hold('a'):
-                    pyautogui.hold("a")
-            elif recognized_gesture == "Thumb_Right": # Move Right
-                with pyautogui.hold('d'):
-                    pyautogui.hold("d")
             elif recognized_gesture == "Closed_Fist": 
                 pyautogui.press("s")
-            elif recognized_gesture == "Victory": # Start Game
-                pyautogui.press("space") 
-            elif recognized_gesture == "": # Jump Right
+            elif recognized_gesture == "Victory": # Jump Right
                 pyautogui.press("w") and pyautogui.press("d")
-            elif recognized_gesture == "": # Jump Left
+            elif recognized_gesture == "I_Love_You": # Jump Left
                 pyautogui.press("w") and pyautogui.press("a")
+
+        
+        if result.hand_landmarks:
+            for hand_landmarks in result.hand_landmarks:
+                print(hand_landmarks)
+                recognized_gesture = recognize_thumb_pointing_left(hand_landmarks)
+                if recognized_gesture == "Thumb_Left": # Move Left
+                    with pyautogui.hold('a'):
+                        pyautogui.hold("a")
+        
+                else:
+                    recognized_gesture = recognize_thumb_pointing_right(hand_landmarks)
+                    if recognized_gesture == "Thumb_Right": # Move Right
+                        print("Thumb right")
+                        with pyautogui.hold('d'):
+                            pyautogui.hold("d")
 
 
             # Display recognized gesture and confidence
