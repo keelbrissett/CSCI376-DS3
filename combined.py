@@ -108,12 +108,14 @@ def main():
                     gesture = recognize_thumb_left(hand_landmarks)
                     if gesture:
                         pyautogui.press("a") # Move Left
+                        time.sleep(0.25)
                     else: # If first gesture isn't recognized, try the next one. 
                         gesture = recognize_thumb_right(hand_landmarks)
                         if gesture: 
                             pyautogui.press("d") # Move Right
+                            time.sleep(0.25)
                         else:
-                            # If none of the custome gestures are recognized, check for canned gestures.
+                            # If none of the custom gestures are recognized, check for canned gestures.
                             # We need to do a little bit of extra processing in order to extract the canned gestures.
                             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=image_rgb)
                             result = gesture_recognizer.recognize(mp_image)
@@ -129,7 +131,10 @@ def main():
                                     pyautogui.press("w")
                                 if gesture == "Closed_Fist": # Move Down
                                     pyautogui.press("s")
-                    
+                                if gesture == "Victory":
+                                    pyautogui.hotkey('command', 'r')  # or 'ctrl', 'r' on Windows
+                                    time.sleep(1)
+                                
                     # Display gesture near hand location
                     cv2.putText(image, gesture, 
                                 (int(hand_landmarks.landmark[0].x * image.shape[1]), 
