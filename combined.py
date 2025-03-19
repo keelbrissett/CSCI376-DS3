@@ -25,12 +25,6 @@ gesture_recognizer = GestureRecognizer.create_from_options(options)
 def calculate_distance(point1, point2):
     return math.hypot(point2[0]-point1[0], point2[1]-point1[1])
 
-def calculate_angle(p1, p2):
-    dx = p2.x - p1.x
-    dy = p2.y - p1.y
-    angle = math.degrees(math.atan2(-dy, dx))  # Negative dy because image y-axis is inverted
-    return angle
-
 def recognize_thumb_left(hand_landmarks):
     thumb_tip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
     thumb_ip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_IP]
@@ -78,31 +72,6 @@ def recognize_thumb_right(hand_landmarks):
         return "Thumb_Right"
     return None
 
-
-
-
-def recognize_ok(hand_landmarks):
-    # Extract necessary landmarks
-    thumb_tip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
-    index_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
-    middle_tip = hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP]
-    ring_tip = hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_TIP]
-    pinky_tip = hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP]
-
-    # Calculate distance between thumb tip and index tip
-    distance = calculate_distance(
-        (thumb_tip.x, thumb_tip.y), 
-        (index_tip.x, index_tip.y)
-    )
-
-    # Check if thumb and index are close and other fingers are open
-    if distance < 0.05:
-        if (middle_tip.y < hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_PIP].y and
-            ring_tip.y < hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_PIP].y and
-            pinky_tip.y < hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_PIP].y):
-            return "Okay Gesture"
-    return None
-
 def main():
     # Initialize video capture
     cap = cv2.VideoCapture(0)  # 0 is the default webcam
@@ -138,11 +107,11 @@ def main():
                     # Try to recognize custom gestures first
                     gesture = recognize_thumb_left(hand_landmarks)
                     if gesture:
-                        pyautogui.keyDown("a") # Keypress logic here corresponding to the first custom gesture
+                        pyautogui.press("a") # Move Left
                     else: # If first gesture isn't recognized, try the next one. 
                         gesture = recognize_thumb_right(hand_landmarks)
                         if gesture: 
-                            pyautogui.keyDown("d") # Keypress logic here corresponding to the second custom gesture
+                            pyautogui.press("d") # Move Right
                         else:
                             # If none of the custome gestures are recognized, check for canned gestures.
                             # We need to do a little bit of extra processing in order to extract the canned gestures.
@@ -151,19 +120,15 @@ def main():
                             if result.gestures:
                                 gesture = result.gestures[0][0].category_name
                                 if gesture == "Open_Palm":
-                                    webbrowser.open('https://www.onlinegames.io/stickman-parkour/', new=2) # Changing endpoint to our game
+                                    webbrowser.open('https://freepacman.org/#google_vignette', new=2) # Changing endpoint to our game
                                     time.sleep(1)
                                     pyautogui.write("Game is Running!", interval=0.25)
                                     # Make sure to allow for time between recognized gestures so only one window is opened
                                     time.sleep(5)
-                                if gesture == "Pointing_Up":
+                                if gesture == "Pointing_Up": # Move Up
                                     pyautogui.press("w")
-                                if gesture == "Closed_Fist":
+                                if gesture == "Closed_Fist": # Move Down
                                     pyautogui.press("s")
-                                if gesture == "Victory":
-                                    pyautogui.press("w") and pyautogui.press("d")
-                                if gesture == "I_Love_You":
-                                    pyautogui.press("w") and pyautogui.press("a")
                     
                     # Display gesture near hand location
                     cv2.putText(image, gesture, 
